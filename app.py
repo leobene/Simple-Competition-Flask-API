@@ -16,12 +16,12 @@ class Competition(Resource):
         for competition in competitions:
             if competition['competicao'] == name:
                return competition
-        return{'competition': None}
+        return{'competicao': None}, 404
 
     def post(self, name):
         competition = {'competicao': name, 'atleta':"Bolt", 'value': 12.00, 'unidade': "s" }
         competitions.append(competition)
-        return competition
+        return competition, 201
 
 api.add_resource(Competition, '/competition/<string:name>')
 
