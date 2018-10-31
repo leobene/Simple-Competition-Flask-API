@@ -23,6 +23,11 @@ class Competition(Resource):
         competitions.append(competition)
         return competition, 201
 
-api.add_resource(Competition, '/competition/<string:name>')
+class CompetitionList(Resource):
+    def get(self):
+      return {'competicoes': competitions}
 
-app.run(port=5006)
+api.add_resource(Competition, '/competition/<string:name>')
+api.add_resource(CompetitionList, '/competitions')
+
+app.run(port=5006, debug=True)
