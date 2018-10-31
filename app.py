@@ -16,6 +16,7 @@ class Competition(Resource):
         for competition in competitions:
             if competition['competicao'] == name:
                return competition
+        return{'competition': None}
 
     def post(self, name):
         competition = {'competicao': name, 'atleta':"Bolt", 'value': 12.00, 'unidade': "s" }
