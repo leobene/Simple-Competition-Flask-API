@@ -19,7 +19,8 @@ class Competition(Resource):
         return{'competicao': None}, 404
 
     def post(self, name):
-        competition = {'competicao': name, 'atleta':"Bolt", 'value': 12.00, 'unidade': "s" }
+        data = request.get_json()
+        competition = {'competicao': name, 'atleta':data['atleta'], 'value': data['value'], 'unidade': data['unidade'] }
         competitions.append(competition)
         return competition, 201
 
