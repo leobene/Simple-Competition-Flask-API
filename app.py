@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask_jwt import JWT, jwt_required, current_identity
 from security import authenticate, identity
+from user import UserRegister
 
 app = Flask(__name__)
 app.secret_key = 'EV'
@@ -35,6 +36,7 @@ class Entry(Resource):
         data = request.get_json()
         entry = {'competicao': name, 'atleta':data['atleta'], 'value': data['value'], 'unidade': data['unidade'] }
         entrys.append(entry)
+        global competitions
         #add the new entry to its respective competition if the competition exists
         for competition in competitions:
             if competition['competicao'] == name:
@@ -86,5 +88,6 @@ api.add_resource(EntryList, '/entrys')
 api.add_resource(Competition, '/competition/<string:name>')
 api.add_resource(CompetitionList, '/competitions')
 api.add_resource(Finish, '/finish/<string:name>')
+api.add_resource(UserRegister, '/register')
 
 app.run(port=5006, debug=True)
