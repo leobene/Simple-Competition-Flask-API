@@ -24,30 +24,43 @@ class Entry(Resource):
       if row:
         return {'entry': {'competicao': row[0], 'atleta': row[1], 'value': row[2], 'unidade': row[3]}}
 
+    @classmethod
+    def insert(cls, entry):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "INSERT INTO entrys VALUES(?, ?, ?, ?)"
+        cursor.execute(query, (entry['competicao'], entry['atleta'], entry['value'], entry['unidade']))
+
+        connection.commit()
+
+
     def post(self, name):
+        if self.find_by_name(name): #ToDo se number of tries in the competition
+            return {'message': "An item with name '{}' already exists.".format(name)}
+
+        #data = Entry.parser.parse_args()
         data = request.get_json()
+
         entry = {'competicao': name, 'atleta':data['atleta'], 'value': data['value'], 'unidade': data['unidade'] }
-        entrys.append(entry)
-        global competitions
+
+        try:
+            Entry.insert(entry)
+        except:
+            return {"message": "An error occurred inserting the entry."}, 500
+
         #add the new entry to its respective competition if the competition exists
-        for competition in competitions:
-            if competition['competicao'] == name:
-              #ranking = competition['ranking'].copy()
-              #ranking.update(entry)
-              print("competition['ranking']")
-              print(competition['ranking'])
-              print("entry")
-              print(entry)
-              ranking = competition['ranking'].copy()
-              ranking.update(entry)
-              print("ranking")
-              print(dict(list(competition['ranking'].items()) + list(entry.items())))
-              comp = {'competicao': competition['competicao'], 'ranking':ranking, 'isFinished': competition['isFinished'], 'numTrys': competition['numTrys'] }
-              competition.update(comp)
-              print("competition.update(")
-              print(competition)
-              return entry, 201
-        return{'competicao': None}, 404 #else competition not found
+        #for competition in competitions:
+         #   if competition['competicao'] == name:
+          #    ranking = competition['ranking'].copy()
+           #   ranking.update(entry)
+            #  print(dict(list(competition['ranking'].items()) + list(entry.items())))
+             # comp = {'competicao': competition['competicao'], 'ranking':ranking, 'isFinished': competition['isFinished'], 'numTrys': competition['numTrys'] }
+              #competition.update(comp)
+              #return entry, 201
+        #return{'competicao': None}, 404 #else competition not found
+
+        return entry, 200
 
 class EntryList(Resource):
     def get(self):

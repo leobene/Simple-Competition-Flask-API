@@ -23,11 +23,30 @@ class Competition(Resource):
       if row:
         return {'competicao': {'competicao': row[0], 'ranking': row[1], 'isFinished': row[2], 'numTrys': row[3]}}
 
+    @classmethod
+    def insert(cls, competition):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "INSERT INTO competitions VALUES(?, ?, ?, ?)"
+        cursor.execute(query, (competition['competicao'], competition['ranking'], competition['isFinished'], competition['numTrys']))
+
+        connection.commit()
+
+
     def post(self, name):
+        if self.find_by_name(name):
+            return {'message': "An competition with name '{}' already exists.".format(name)}
+
+        #data = Entry.parser.parse_args()
         data = request.get_json()
-        competition = {'competicao': name, 'ranking':{}, 'isFinished': False, 'numTrys': data['numTrys'] }
-        competitions.append(competition)
-        return competition, 201
+        competition = {'competicao': name, 'ranking':0, 'isFinished': False, 'numTrys': data['numTrys'] }
+
+        try:
+            Competition.insert(competition)
+        except:
+            return {"message": "An error occurred inserting the competition."}, 500
+        return competition, 200
 
 class CompetitionList(Resource):
     def get(self):
