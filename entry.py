@@ -6,6 +6,13 @@ from flask_jwt import JWT, jwt_required
 class Entry(Resource):
     @jwt_required()
     def get(self, name):
+      entry = self.find_by_name(name)
+      if entry:
+        return entry
+      return{'message': 'Entry not found'}, 404
+
+    @classmethod
+    def find_by_name(cls, name):
       connection = sqlite3.connect('data.db')
       cursor = connection.cursor()
 
@@ -16,7 +23,6 @@ class Entry(Resource):
 
       if row:
         return {'entry': {'competicao': row[0], 'atleta': row[1], 'value': row[2], 'unidade': row[3]}}
-      return{'message': 'Entry not found'}, 404
 
     def post(self, name):
         data = request.get_json()

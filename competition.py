@@ -5,6 +5,13 @@ from flask_jwt import JWT, jwt_required
 
 class Competition(Resource):
     def get(self, name):
+      competition = self.find_by_name(name)
+      if competition:
+        return competition
+      return{'message': 'Competition not found'}, 404
+
+    @classmethod
+    def find_by_name(cls, name):
       connection = sqlite3.connect('data.db')
       cursor = connection.cursor()
 
@@ -15,7 +22,6 @@ class Competition(Resource):
 
       if row:
         return {'competicao': {'competicao': row[0], 'ranking': row[1], 'isFinished': row[2], 'numTrys': row[3]}}
-      return{'message': 'Entry not found'}, 404
 
     def post(self, name):
         data = request.get_json()
