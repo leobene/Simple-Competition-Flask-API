@@ -33,4 +33,5 @@ api.add_resource(CompetitionList, '/competitions')
 api.add_resource(Finish, '/finish/<string:name>')
 api.add_resource(UserRegister, '/register')
 
-app.run(port=5006, debug=True)
+if __name__ == '__main__':
+  app.run(port=5006, debug=True)
