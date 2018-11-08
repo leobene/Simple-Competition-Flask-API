@@ -1,8 +1,13 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
+from flask_jwt import JWT, jwt_required, current_identity
+from security import authenticate, identity
 
 app = Flask(__name__)
+app.secret_key = 'EV'
 api = Api(app)
+
+jwt = JWT(app, authenticate, identity)
 
 competitions = [{
   'competicao': '100m',
@@ -19,6 +24,7 @@ entrys = [{
 }]
 
 class Entry(Resource):
+    @jwt_required()
     def get(self, name):
         for entry in entrys:
             if entry['competicao'] == name:
@@ -29,7 +35,15 @@ class Entry(Resource):
         data = request.get_json()
         entry = {'competicao': name, 'atleta':data['atleta'], 'value': data['value'], 'unidade': data['unidade'] }
         entrys.append(entry)
-        return entry, 201
+        #add the new entry to its respective competition if the competition exists
+        for competition in competitions:
+            if competition['competicao'] == name:
+              ranking = competition['ranking'].copy()
+              ranking.update(entry)
+              comp = {'competicao': competition['competicao'], 'ranking':ranking, 'isFinished': competition['isFinished'], 'numTrys': competition['numTrys'] }
+              competition.update(comp)
+              return entry, 201
+        return{'competicao': None}, 404 #else competition not found
 
 class EntryList(Resource):
     def get(self):
