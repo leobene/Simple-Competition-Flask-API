@@ -62,6 +62,19 @@ class Entry(Resource):
 
         return entry, 200
 
+    #@jwt_required()
+    def delete(self, name):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "DELETE FROM entrys WHERE competicao=?"
+        cursor.execute(query, (name,))
+
+        connection.commit()
+        connection.close()
+
+        return {'message': 'Entry deleted'}, 404
+
 class EntryList(Resource):
     def get(self):
       return {'entradas': entrys}

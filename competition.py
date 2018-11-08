@@ -48,6 +48,22 @@ class Competition(Resource):
             return {"message": "An error occurred inserting the competition."}, 500
         return competition, 200
 
+    #@jwt_required()
+    def delete(self, name):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "DELETE FROM competitions WHERE competicao=?"
+        cursor.execute(query, (name,))
+
+        connection.commit()
+        connection.close()
+
+        #ToDo: Delete all entries from that competition
+
+        return {'message': 'Competition deleted'}, 404
+
+
 class CompetitionList(Resource):
     def get(self):
       return {'competicoes': competitions}
