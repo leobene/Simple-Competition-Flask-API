@@ -63,6 +63,36 @@ class Competition(Resource):
 
         return {'message': 'Competition deleted'}, 404
 
+    
+    @classmethod
+    def update(cls, competition):
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "UPDATE competitions SET isFinished=? WHERE competicao=?"
+        cursor.execute(query, (competition['isFinished'], competition['competicao']))
+
+        connection.commit()
+        connection.close()
+
+    #@jwt_required()
+    def put(self, name):
+        #data = Competition.parser.parse_args()
+        data = request.get_json()
+        competition = self.find_by_name(name)
+        updated_competition = {'competicao': name, 'isFinished': data['isFinished'], 'ranking':0, 'numTrys': data['numTrys'] }
+        if competition is None:
+            try:
+                Competition.insert(updated_competition)
+            except:
+                return {"message": "An error occurred inserting the competition."}
+        else:
+            try:
+                Competition.update(updated_competition)
+            except:
+                raise
+                return {"message": "An error occurred updating the competition."}
+        return updated_competition
 
 class CompetitionList(Resource):
     def get(self):
