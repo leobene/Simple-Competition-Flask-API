@@ -75,6 +75,17 @@ class Entry(Resource):
 
         return {'message': 'Entry deleted'}, 404
 
-class EntryList(Resource):
+class EntryList(Resource):   
     def get(self):
+      connection = sqlite3.connect('data.db')
+      cursor = connection.cursor()
+
+      query = "SELECT * FROM competitions"
+      result = cursor.execute(query)
+      entrys = []
+      for row in result:
+        entrys.append({'competicao': row[0], 'atleta': row[1], 'value':row[2], 'unidade': row[3] })
+
+      connection.close()
       return {'entradas': entrys}
+      

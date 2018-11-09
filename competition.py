@@ -96,7 +96,17 @@ class Competition(Resource):
 
 class CompetitionList(Resource):
     def get(self):
-      return {'competicoes': competitions}
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        query = "SELECT * FROM competitions"
+        result = cursor.execute(query)
+        competitions = []
+        for row in result:
+            competitions.append({'competicao': row[0], 'isFinished': row[1], 'ranking':row[2], 'numTrys': row[3] })
+        connection.close()
+
+        return {'competitions': competitions}
 
 class Finish(Resource):
     def get(self, name):
