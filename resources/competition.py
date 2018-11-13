@@ -1,10 +1,28 @@
 import sqlite3
 from flask import Flask, request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
 from models.competition import CompetitionModel
 
 class Competition(Resource):
+
+    parser = reqparse.RequestParser()
+    parser.add_argument('isFinished',
+        type=bool,
+        required=True,
+        help="This field cannot be left blank!"
+    )
+    parser.add_argument('ranking',
+        type=int,
+        required=False,
+        help="This field cannot be left blank!"
+    )
+    parser.add_argument('numTrys',
+        type=int,
+        required=True,
+        help="This field cannot be left blank!"
+    )
+
     def get(self, name):
       competition = CompetitionModel.find_by_name(name)
       if competition:
@@ -15,16 +33,15 @@ class Competition(Resource):
         if CompetitionModel.find_by_name(name):
             return {'message': "An competition with name '{}' already exists.".format(name)}
 
-        #data = Entry.parser.parse_args()
-        data = request.get_json()
-        competition = CompetitionModel(name, 0, False, data['numTrys'])
+        data = Entry.parser.parse_args()
+        competition = CompetitionModel(name, 0, 0, data['numTrys'])
 
         try:
             competition.insert()
         except:
             return {"message": "An error occurred inserting the competition."}, 500
-            
-        return competition.json(), 200
+
+        return competition.json(), 201
 
     #@jwt_required()
     def delete(self, name):
@@ -43,8 +60,7 @@ class Competition(Resource):
 
     #@jwt_required()
     def put(self, name):
-        #data = Competition.parser.parse_args()
-        data = request.get_json()
+        data = Competition.parser.parse_args()
         competition = CompetitionModel.find_by_name(name)
         updated_competition = CompetitionModel(name, data['isFinished'], 0, data['numTrys'])
         if competition is None:
