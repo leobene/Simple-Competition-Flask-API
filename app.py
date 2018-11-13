@@ -8,6 +8,7 @@ from resources.competition import Competition, CompetitionList, Finish
 
 app = Flask(__name__)
 app.secret_key = 'EV'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 api = Api(app)
 
 jwt = JWT(app, authenticate, identity)
@@ -20,4 +21,6 @@ api.add_resource(Finish, '/finish/<string:name>')
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__':
-  app.run(port=5006, debug=True)
+	from db import db
+	db.init_app(app)
+	app.run(port=5006, debug=True)
