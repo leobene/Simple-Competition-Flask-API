@@ -36,6 +36,17 @@ class Entry(Resource):
 
     def post(self, name):
         _entry = EntryModel.find_by_name(name)
+        competition = CompetitionModel.find_by_name(name)
+        if competition:
+          if competition.isFinished:
+            return {'message': "The competition '{}' is Finished! Can not accept more entries!".format(name)}
+
+          numTrys = competition.numTrys
+        else:
+          return {'message': "The competition '{}' doesen't exists.".format(name)}
+
+        print(numTrys)
+
         if _entry: #ToDo se number of tries in the competition
             return {'message': "An item with name '{}' already exists.".format(name)}
 
@@ -47,13 +58,6 @@ class Entry(Resource):
             entry.save_to_db()
         except:
             return {"message": "An error occurred inserting the entry."}, 500
-
-        #add the new entry to its respective competition if the competition exists
-        #for competition in competitions:
-         #   if competition['competicao'] == name:
-              #competition.update(comp)
-              #return entry, 201
-        #return{'competicao': None}, 404 #else competition not found
 
         return entry.json(), 201
 
