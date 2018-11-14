@@ -75,7 +75,7 @@ class Finish(Resource):
     def get(self, name):
         competition = CompetitionModel.find_by_name(name)
         if competition:
-            return competition.json()
+            return competition.json()['isFinished']
         #ToDo retornar o isFinished
         return{'message': 'Competition not found'}, 404
 
@@ -90,4 +90,4 @@ class Finish(Resource):
 
         competition.save_to_db()
 
-        return updated_competition.json(), 201
+        return competition.json(), 201
