@@ -41,13 +41,15 @@ class Entry(Resource):
           return {'message': "The competition '{}' doesen't exists.".format(name)}
 
         data = Entry.parser.parse_args()
-        athlete_num_tries = EntryModel.find_athelte_tries(name, data['atleta'])
+        competition_id = CompetitionModel.find_competition_id(name)
+        print(competition_id)
+        athlete_num_tries = EntryModel.find_athelte_tries(competition_id, data['atleta'])
         
         if _entry and athlete_num_tries and athlete_num_tries > competition_num_tries:
             return {'message': "{} has reached the maximum number of attempts in {} competition.".format(data['atleta'], name)}
 
         competition = CompetitionModel.find_by_name(name)
-        entry = EntryModel(name, data['atleta'], data['value'], data['unidade'], competition.id)
+        entry = EntryModel(data['atleta'], data['value'], data['unidade'], competition.id)
 
         try:
             entry.save_to_db()

@@ -13,11 +13,6 @@ class Competition(Resource):
         required=True,
         help="This field cannot be left blank!"
     )
-    parser.add_argument('ranking',
-        type=int,
-        required=False,
-        help="This field cannot be left blank!"
-    )
     parser.add_argument('numTrys',
         type=int,
         required=True,
@@ -35,7 +30,7 @@ class Competition(Resource):
             return {'message': "An competition with name '{}' already exists.".format(name)}
 
         data = Competition.parser.parse_args()
-        competition = CompetitionModel(name, 0, 0, data['numTrys'])
+        competition = CompetitionModel(name, 0, data['numTrys'])
 
         try:
             competition.save_to_db()
@@ -62,7 +57,7 @@ class Competition(Resource):
             competition.isFinished = data['isFinished']
             competition.numTrys = data['numTrys']
         else:
-            competition = CompetitionModel(name, data['isFinished'], 0, data['numTrys'])
+            competition = CompetitionModel(name, data['isFinished'], data['numTrys'])
 
         competition.save_to_db()
 
@@ -76,8 +71,8 @@ class Finish(Resource):
     def get(self, name):
         competition = CompetitionModel.find_by_name(name)
         if competition:
-            print([entry.json() for entry in EntryModel.query.filter_by(competicao=name).order_by('value')])
-            return competition.json()['isFinished']
+            competition_id = CompetitionModel.find_competition_id(name)
+            return [entry.json() for entry in EntryModel.query.filter_by(competition_id=competition_id).order_by('value')]
         
         return{'message': 'Competition not found'}, 404
 

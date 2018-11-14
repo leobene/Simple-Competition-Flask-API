@@ -6,24 +6,26 @@ class CompetitionModel(db.Model):
 
   id = db.Column(db.Integer, primary_key=True)
   competicao = db.Column(db.String(80))
-  ranking = db.Column(db.Integer())
   isFinished = db.Column(db.Boolean())
   numTrys = db.Column(db.Integer())
 
   entrys = db.relationship('EntryModel') #,lazy='dynamic')
 
-  def __init__(self, competicao, ranking, isFinished, numTrys):
+  def __init__(self, competicao, isFinished, numTrys):
       self.competicao = competicao
-      self.ranking = ranking
       self.isFinished = isFinished
       self.numTrys = numTrys
 
   def json(self):
-  	return {'competicao': self.competicao, 'ranking': self.ranking, 'isFinished':self.isFinished, 'numTrys': self.numTrys, 'entrys':[entry.json() for entry in self.entrys]} #.all()
+  	return {'competicao': self.competicao, 'isFinished':self.isFinished, 'numTrys': self.numTrys, 'entrys':[entry.json() for entry in self.entrys]} #.all()
 
   @classmethod
   def find_by_name(cls, name):
     return cls.query.filter_by(competicao=name).first()
+
+  @classmethod
+  def find_competition_id(cls, name):
+    return cls.query.filter_by(competicao=name).first().id
 
   def save_to_db(self):
       db.session.add(self)
