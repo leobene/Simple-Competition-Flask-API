@@ -37,7 +37,7 @@ class Entry(Resource):
         entry = EntryModel(name, data['atleta'], data['value'], data['unidade'])
 
         try:
-            entry.insert()
+            entry.save_to_db()
         except:
             return {"message": "An error occurred inserting the entry."}, 500
 
@@ -52,28 +52,13 @@ class Entry(Resource):
 
     #@jwt_required()
     def delete(self, name):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-
-        query = "DELETE FROM entrys WHERE competicao=?"
-        cursor.execute(query, (name,))
-
-        connection.commit()
-        connection.close()
+        item = EntryModel.find_by_name(name)
+        if item:
+          item.delete_from_db()
 
         return {'message': 'Entry deleted'}, 404
 
 class EntryList(Resource):   
     def get(self):
-      connection = sqlite3.connect('data.db')
-      cursor = connection.cursor()
-
-      query = "SELECT * FROM competitions"
-      result = cursor.execute(query)
-      entrys = []
-      for row in result:
-        entrys.append({'competicao': row[0], 'atleta': row[1], 'value':row[2], 'unidade': row[3] })
-
-      connection.close()
-      return {'entradas': entrys}
+      return {'entradas': [entry.json() for entry in EntryModel.query.all()]}
       
