@@ -10,11 +10,15 @@ class EntryModel(db.Model):
     value = db.Column(db.Float(precision=2))
     unidade = db.Column(db.String(10))
 
-    def __init__(self, competicao, atleta, value, unidade):
+    competition_id = db.Column(db.Integer, db.ForeignKey('competitions.id'))
+    competition = db.relationship('CompetitionModel')
+
+    def __init__(self, competicao, atleta, value, unidade, competition_id):
         self.competicao = competicao
         self.atleta = atleta
         self.value = value
         self.unidade = unidade
+        self.competition_id = competition_id
 
     def json(self):
     	return {'competicao': self.competicao, 'atleta': self.atleta, 'value':self.value, 'unidade': self.unidade}

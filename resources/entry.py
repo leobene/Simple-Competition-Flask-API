@@ -1,8 +1,8 @@
-import sqlite3
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
 from models.entry import EntryModel
+from models.competition import CompetitionModel
 
 class Entry(Resource):
     parser = reqparse.RequestParser()
@@ -21,6 +21,11 @@ class Entry(Resource):
         required=True,
         help="This field cannot be left blank!"
     )
+    #parser.add_argument('competition_id',
+     #   type=int,
+      #  required=True,
+       # help="Every entry needs a competition id!"
+    #)
 
     @jwt_required()
     def get(self, name):
@@ -30,11 +35,13 @@ class Entry(Resource):
       return{'message': 'Entry not found'}, 404
 
     def post(self, name):
-        if EntryModel.find_by_name(name): #ToDo se number of tries in the competition
+        _entry = EntryModel.find_by_name(name)
+        if _entry: #ToDo se number of tries in the competition
             return {'message': "An item with name '{}' already exists.".format(name)}
 
         data = Entry.parser.parse_args()
-        entry = EntryModel(name, data['atleta'], data['value'], data['unidade'])
+        competition = CompetitionModel.find_by_name(name)
+        entry = EntryModel(name, data['atleta'], data['value'], data['unidade'], competition.id)
 
         try:
             entry.save_to_db()

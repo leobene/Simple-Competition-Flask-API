@@ -1,8 +1,7 @@
 import sqlite3
 from db import db
 
-class CompetitionModel(object):
-
+class CompetitionModel(db.Model):
   __tablename__ = 'competitions'
 
   id = db.Column(db.Integer, primary_key=True)
@@ -11,6 +10,8 @@ class CompetitionModel(object):
   isFinished = db.Column(db.Boolean())
   numTrys = db.Column(db.Integer())
 
+  entrys = db.relationship('EntryModel') #,lazy='dynamic')
+
   def __init__(self, competicao, ranking, isFinished, numTrys):
       self.competicao = competicao
       self.ranking = ranking
@@ -18,37 +19,17 @@ class CompetitionModel(object):
       self.numTrys = numTrys
 
   def json(self):
-  	return {'competicao': self.competicao, 'ranking': self.ranking, 'isFinished':self.isFinished, 'numTrys': self.numTrys}
+  	return {'competicao': self.competicao, 'ranking': self.ranking, 'isFinished':self.isFinished, 'numTrys': self.numTrys, 'entrys':[entry.json() for entry in self.entrys]} #.all()
 
   @classmethod
   def find_by_name(cls, name):
-    connection = sqlite3.connect('data.db')
-    cursor = connection.cursor()
+    return cls.query.filter_by(competicao=name).first()
 
-    query = "SELECT * FROM competitions WHERE competicao=?"
-    result = cursor.execute(query, (name,))
-    row = result.fetchone()
-    connection.close()
+  def save_to_db(self):
+      db.session.add(self)
+      db.session.commit()
 
-    if row:
-      return cls(*row)
-
-  def insert(self):
-      connection = sqlite3.connect('data.db')
-      cursor = connection.cursor()
-
-      query = "INSERT INTO competitions VALUES(?, ?, ?, ?)"
-      cursor.execute(query, (self.competicao, self.ranking, self.isFinished, self.numTrys))
-
-      connection.commit()
-
-  def update(self):
-      connection = sqlite3.connect('data.db')
-      cursor = connection.cursor()
-
-      query = "UPDATE competitions SET isFinished=? WHERE competicao=?"
-      cursor.execute(query, (self.isFinished, self.competicao))
-
-      connection.commit()
-      connection.close()
+  def delete_from_db(self):
+    db.session.delete(self)
+    db.session.commit()
 

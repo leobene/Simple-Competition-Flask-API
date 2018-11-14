@@ -33,11 +33,11 @@ class Competition(Resource):
         if CompetitionModel.find_by_name(name):
             return {'message': "An competition with name '{}' already exists.".format(name)}
 
-        data = Entry.parser.parse_args()
+        data = Competition.parser.parse_args()
         competition = CompetitionModel(name, 0, 0, data['numTrys'])
 
         try:
-            competition.insert()
+            competition.save_to_db()
         except:
             return {"message": "An error occurred inserting the competition."}, 500
 
@@ -45,16 +45,9 @@ class Competition(Resource):
 
     #@jwt_required()
     def delete(self, name):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-
-        query = "DELETE FROM competitions WHERE competicao=?"
-        cursor.execute(query, (name,))
-
-        connection.commit()
-        connection.close()
-
-        #ToDo: Delete all entries from that competition
+        competition = CompetitionModel.find_by_name(name)
+        if competition:
+            competition.delete_from_db()
 
         return {'message': 'Competition deleted'}, 404
 
@@ -62,33 +55,21 @@ class Competition(Resource):
     def put(self, name):
         data = Competition.parser.parse_args()
         competition = CompetitionModel.find_by_name(name)
-        updated_competition = CompetitionModel(name, data['isFinished'], 0, data['numTrys'])
-        if competition is None:
-            try:
-                updated_competition.insert()
-            except:
-                return {"message": "An error occurred inserting the competition."}
+
+        if competition:
+            competition.name = name
+            competition.isFinished = data['isFinished']
+            competition.numTrys = data['numTrys']
         else:
-            try:
-                updated_competition.update()
-            except:
-                raise
-                return {"message": "An error occurred updating the competition."}
-        return updated_competition.json()
+            competition = CompetitionModel(name, data['isFinished'], 0, data['numTrys'])
+
+        competition.save_to_db()
+
+        return competition.json()
 
 class CompetitionList(Resource):
     def get(self):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-
-        query = "SELECT * FROM competitions"
-        result = cursor.execute(query)
-        competitions = []
-        for row in result:
-            competitions.append({'competicao': row[0], 'isFinished': row[1], 'ranking':row[2], 'numTrys': row[3] })
-        connection.close()
-
-        return {'competitions': competitions}
+        return {'competitions': [competition.json() for competition in CompetitionModel.query.all()]}
 
 class Finish(Resource):
     def get(self, name):
@@ -99,15 +80,14 @@ class Finish(Resource):
         return{'message': 'Competition not found'}, 404
 
     def post(self, name):
-        data = request.get_json()
+        data = Competition.parser.parse_args()
         competition = CompetitionModel.find_by_name(name)
+
         if competition is None:
             return{'message': 'Competition not found'}, 404
         else:
-            try:
-                updated_competition = CompetitionModel(name, data['isFinished'], 0, data['numTrys'])
-                updated_competition.update()
-            except:
-                raise
-                return {"message": "An error occurred finishing the competition."}
+            competition.isFinished = True
+
+        competition.save_to_db()
+
         return updated_competition.json(), 201
