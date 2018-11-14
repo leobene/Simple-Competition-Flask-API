@@ -21,7 +21,7 @@ class EntryModel(db.Model):
 
     @classmethod
     def find_by_name(cls, name):
-      return cls.query.filter_by(name=name).first()
+      return cls.query.filter_by(competicao=name).first()
 
     def save_to_db(self):
         db.session.add(self)
