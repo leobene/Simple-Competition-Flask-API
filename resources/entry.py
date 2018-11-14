@@ -41,16 +41,16 @@ class Entry(Resource):
           if competition.isFinished:
             return {'message': "The competition '{}' is Finished! Can not accept more entries!".format(name)}
 
-          numTrys = competition.numTrys
+          competition_num_tries = competition.numTrys
         else:
           return {'message': "The competition '{}' doesen't exists.".format(name)}
 
-        print(numTrys)
-
-        if _entry: #ToDo se number of tries in the competition
-            return {'message': "An item with name '{}' already exists.".format(name)}
-
         data = Entry.parser.parse_args()
+        athlete_num_tries = EntryModel.find_athelte_tries(name, data['atleta'])
+        
+        if _entry and athlete_num_tries and athlete_num_tries > competition_num_tries:
+            return {'message': "{} has reached the maximum number of attempts in {} competition.".format(data['atleta'], name)}
+
         competition = CompetitionModel.find_by_name(name)
         entry = EntryModel(name, data['atleta'], data['value'], data['unidade'], competition.id)
 

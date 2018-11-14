@@ -27,6 +27,10 @@ class EntryModel(db.Model):
     def find_by_name(cls, name):
       return cls.query.filter_by(competicao=name).first()
 
+    @classmethod
+    def find_athelte_tries(cls, competition, athelte):
+      return cls.query.filter_by(competicao=competition, atleta=athelte).paginate().total
+
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
