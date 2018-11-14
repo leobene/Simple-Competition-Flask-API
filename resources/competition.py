@@ -3,6 +3,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from flask_jwt import JWT, jwt_required
 from models.competition import CompetitionModel
+from models.entry import EntryModel
 
 class Competition(Resource):
 
@@ -75,6 +76,7 @@ class Finish(Resource):
     def get(self, name):
         competition = CompetitionModel.find_by_name(name)
         if competition:
+            print([entry.json() for entry in EntryModel.query.filter_by(competicao=name).order_by('value')])
             return competition.json()['isFinished']
         
         return{'message': 'Competition not found'}, 404

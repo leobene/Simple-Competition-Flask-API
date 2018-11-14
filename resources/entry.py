@@ -21,11 +21,6 @@ class Entry(Resource):
         required=True,
         help="This field cannot be left blank!"
     )
-    #parser.add_argument('competition_id',
-     #   type=int,
-      #  required=True,
-       # help="Every entry needs a competition id!"
-    #)
 
     @jwt_required()
     def get(self, name):
