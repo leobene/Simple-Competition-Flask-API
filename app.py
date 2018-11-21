@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_restful import Api
-from flask_jwt import JWT, current_identity
+from flask_jwt import JWT, JWTError, current_identity
 from security import authenticate, identity
 from resources.user import UserRegister
 from resources.entry import Entry, EntryList
