@@ -43,7 +43,7 @@ class Entry(Resource):
         data = Entry.parser.parse_args()
         competition_id = CompetitionModel.find_competition_id(name)
         print(competition_id)
-        athlete_num_tries = EntryModel.find_athelte_tries(competition_id, data['atleta'])
+        athlete_num_tries = EntryModel.find_athlete_tries(competition_id, data['atleta'])
         
         if _entry and athlete_num_tries and athlete_num_tries > competition_num_tries:
             return {'message': "{} has reached the maximum number of attempts in {} competition.".format(data['atleta'], name)}
