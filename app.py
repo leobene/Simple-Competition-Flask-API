@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, jsonify
 from flask_restful import Api
 from flask_jwt import JWT, current_identity
 from security import authenticate, identity
@@ -25,6 +25,10 @@ api.add_resource(Competition, '/competition/<string:name>')
 api.add_resource(CompetitionList, '/competitions')
 api.add_resource(Finish, '/finish/<string:name>')
 api.add_resource(UserRegister, '/register')
+
+@app.errorhandler(JWTError)
+def auth_error(err):
+    return jsonify({'message': 'Could not authorize. Did you include a valid Authorization header?'}), 401
 
 if __name__ == '__main__':
 	from db import db
