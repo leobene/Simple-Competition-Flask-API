@@ -10,7 +10,7 @@ every time.
 """
 
 class BaseTest(TestCase):
-    SQLALCHEMY_DATABASE_URI = "sqlite://"
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///'
 
     @classmethod
     def setUpClass(cls):

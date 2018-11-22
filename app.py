@@ -9,12 +9,9 @@ from resources.competition import Competition, CompetitionList, Finish
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
 app.secret_key = 'EV'
 api = Api(app)
-
-@app.before_first_request
-def create_tables():
-	db.create_all()
 
 
 jwt = JWT(app, authenticate, identity)
@@ -31,6 +28,13 @@ def auth_error(err):
     return jsonify({'message': 'Could not authorize. Did you include a valid Authorization header?'}), 401
 
 if __name__ == '__main__':
-	from db import db
-	db.init_app(app)
-	app.run(port=5006, debug=True)
+    from db import db
+
+    db.init_app(app)
+
+    if app.config['DEBUG']:
+        @app.before_first_request
+        def create_tables():
+            db.create_all()
+
+    app.run(port=5006, debug=True)
