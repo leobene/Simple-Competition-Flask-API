@@ -64,7 +64,7 @@ class Entry(Resource):
         if item:
           item.delete_from_db()
 
-        return {'message': 'Entry deleted'}, 404
+        return {'message': 'Entry deleted'}, 200
 
 class EntryList(Resource):   
     def get(self):
