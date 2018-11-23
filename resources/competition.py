@@ -27,7 +27,7 @@ class Competition(Resource):
 
     def post(self, name):
         if CompetitionModel.find_by_name(name):
-            return {'message': "An competition with name '{}' already exists.".format(name)}
+            return {'message': "An competition with name '{}' already exists.".format(name)}, 500
 
         data = Competition.parser.parse_args()
         competition = CompetitionModel(name, 0, data['numTrys'])
@@ -45,7 +45,7 @@ class Competition(Resource):
         if competition:
             competition.delete_from_db()
 
-        return {'message': 'Competition deleted'}, 404
+        return {'message': 'Competition deleted'}, 200
 
     #@jwt_required()
     def put(self, name):
