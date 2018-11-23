@@ -77,7 +77,6 @@ class Finish(Resource):
         return{'message': 'Competition not found'}, 404
 
     def post(self, name):
-        data = Competition.parser.parse_args()
         competition = CompetitionModel.find_by_name(name)
 
         if competition is None:
@@ -87,4 +86,4 @@ class Finish(Resource):
 
         competition.save_to_db()
 
-        return competition.json(), 201
+        return competition.json(), 200

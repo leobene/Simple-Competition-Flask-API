@@ -108,7 +108,39 @@ class CompetitionTest(BaseTest):
                                      d2=json.loads(r.data.decode('utf-8')))
 
     def test_get_competition_ranking(self):
-        pass
+        with self.app() as c:
+            with self.app_context():
+                CompetitionModel('100m', False, 1).save_to_db()
+                EntryModel('Bolt', 9.59, 's', 1).save_to_db()
+                EntryModel('Lazy', 19.59, 's', 1).save_to_db()
+                EntryModel('human', 12.59, 's', 1).save_to_db()
+                r = c.get('/finish/100m')
+
+                self.assertEqual(r.status_code, 200)
+                self.assertEqual([{'atleta': 'Bolt', 'value': 9.59, 'unidade': 's'},
+                    {'atleta': 'human', 'value': 12.59, 'unidade': 's'},
+                    {'atleta': 'Lazy', 'value': 19.59, 'unidade': 's'}],
+                    json.loads(r.data.decode('utf-8')))
+
+    def test_set_nonexistent_competition_isFinished(self):
+        with self.app() as c:
+            with self.app_context():
+                r = c.post('/finish/100m')
+
+                self.assertEqual(r.status_code, 404)
+                self.assertDictEqual(d1={'message': 'Competition not found'},
+                                     d2=json.loads(r.data.decode('utf-8')))
+
 
     def test_set_competition_isFinished(self):
-        pass
+        with self.app() as c:
+            with self.app_context():
+                CompetitionModel('100m', False, 1).save_to_db()
+                r = c.post('/finish/100m')
+
+                self.assertEqual(r.status_code, 200)
+                r = c.get('/competition/100m')
+
+                self.assertEqual(r.status_code, 200)
+                self.assertDictEqual(d1={'competicao': '100m', 'entrys': [], 'isFinished': True, 'numTrys': 1},
+                                     d2=json.loads(r.data.decode('utf-8')))
