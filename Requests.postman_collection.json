@@ -1,0 +1,443 @@
+{
+	"info": {
+		"_postman_id": "3fa284e2-e544-4954-a16c-ca110104edda",
+		"name": "Requests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Store Restfull with Auth",
+			"item": [
+				{
+					"name": "/entrys",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a8be7b4d-5ce6-4a7d-9714-6aa2ee77a285",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/entrys",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entrys"
+							]
+						},
+						"description": "This should return a list of itens, each in JSON format"
+					},
+					"response": []
+				},
+				{
+					"name": "/competitions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/competitions",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"competitions"
+							]
+						},
+						"description": "This should return a list of itens, each in JSON format"
+					},
+					"response": []
+				},
+				{
+					"name": "/entry/<name>",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "JWT {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/entry/200m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entry",
+								"200m"
+							]
+						},
+						"description": "This will return one specific item, uniquely identified by its name. No tow items may have the same name."
+					},
+					"response": []
+				},
+				{
+					"name": "/competition/<name>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/competition/200m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"competition",
+								"200m"
+							]
+						},
+						"description": "This will return one specific item, uniquely identified by its name. No tow items may have the same name."
+					},
+					"response": []
+				},
+				{
+					"name": "/finish/<name>",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/finish/100m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"finish",
+								"100m"
+							]
+						},
+						"description": "This will return one specific item, uniquely identified by its name. No tow items may have the same name."
+					},
+					"response": []
+				},
+				{
+					"name": "/entry/<name>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "86936cc8-1a95-45ba-8436-d657e2568a78",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"atleta\":\"rodolf Bolt\",\n\t\"value\": 19.29,\n\t\"unidade\": \"s\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/entry/200m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entry",
+								"200m"
+							]
+						},
+						"description": "This create a new item,if the item already exists it will fail."
+					},
+					"response": []
+				},
+				{
+					"name": "/competition/<name>",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "98861a0d-722c-4458-b257-60ef19bae27a",
+								"exec": [
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ranking\": 3,\n\t\"isFinished\": \"False\",\n\t\"numTrys\": 1\n}"
+						},
+						"url": {
+							"raw": "{{url}}/competition/2m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"competition",
+								"2m"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"description": "    ",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This create a new item,if the item already exists it will fail."
+					},
+					"response": []
+				},
+				{
+					"name": "/finish/<name>",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"competicao\":\"2000m\",\n\t\"ranking\": 1,\n\t\"isFinished\": \"False\",\n\t\"numTrys\": \"1\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/finish/200m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"finish",
+								"200m"
+							],
+							"query": [
+								{
+									"key": "",
+									"value": "",
+									"description": "    ",
+									"disabled": true
+								}
+							]
+						},
+						"description": "This create a new item,if the item already exists it will fail."
+					},
+					"response": []
+				},
+				{
+					"name": "/competition/<name>",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ranking\": 1,\n\t\"isFinished\":0,\n\t\"numTrys\":2\n}"
+						},
+						"url": {
+							"raw": "{{url}}/competition/100m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"competition",
+								"100m"
+							]
+						},
+						"description": "This create a new item or update an existing one."
+					},
+					"response": []
+				},
+				{
+					"name": "/entry/<name>",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/entry/2m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"entry",
+								"2m"
+							]
+						},
+						"description": "This will delete one specific item, uniquely identified by its name. No tow items may have the same name."
+					},
+					"response": []
+				},
+				{
+					"name": "/competition/<name>",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/competition/2m",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"competition",
+								"2m"
+							]
+						},
+						"description": "This will delete one specific item, uniquely identified by its name. No tow items may have the same name."
+					},
+					"response": []
+				},
+				{
+					"name": "/auth",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c05f7af3-4474-4fe9-a570-539b659e2be8",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody)",
+									"tests[\"access_token was not empty\"] = jsonData.access_token !== undefined;",
+									"",
+									"pm.environment.set(\"jwt_token\", jsonData.access_token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\":\"bob\",\n\t\"password\": \"asdf\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/auth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\":\"bob\",\n\t\"password\": \"asdf\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"register"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
