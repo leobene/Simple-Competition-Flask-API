@@ -27,8 +27,7 @@ From the API we can:
   }
   ```
 3. Finish a competition.
-4. Return the competition, showing the final position of each athlete.
-
+4. Return the competition rank, showing the final position of each athlete.
 
 ### **Rules**:
 1. The API should not accept results records if the competition is already finished.
@@ -37,6 +36,20 @@ From the API we can:
 competition shall take into account the furthest throwing of each athlete.
 
 
-### ToDO:
-1 - Tests
-2 - API Readme
+## Setting up the application
+To download and start the application issue the following commands.
+First clone the application code into any directory on your disk:
+
+$ cd /path/to/my/workspace/
+$ git clone https://github.com/leobene/Simple-Competition-Flask-API
+$ cd Simple-Competition-Flask-API
+Create a virtual Python environment in a directory named venv, activate the virtualenv and install required dependencies using pip:
+
+$ virtualenv -p python3 venv
+$ source venv/bin/activate
+(venv) $ pip install -r requirements.txt
+Now let’s start the app:
+
+(venv) $ python app.py
+OK, everything should be ready. In your browser, open the URL http://127.0.0.1:5006/
+
