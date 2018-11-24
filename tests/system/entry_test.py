@@ -36,7 +36,7 @@ class EntryTest(BaseTest):
                 r = c.get('/entry/100m', headers={'Authorization': self.auth_header})
 
                 self.assertEqual(r.status_code, 200)
-                self.assertDictEqual(d1={'atleta': 'Usain Bolt', 'unidade': 's', 'value': 9.59},
+                self.assertDictEqual(d1={'100m': [{'atleta': 'Usain Bolt', 'unidade': 's', 'value': 9.59}]},
                                      d2=json.loads(r.data.decode('utf-8')))
 
     def test_delete_entry(self):

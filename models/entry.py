@@ -24,7 +24,7 @@ class EntryModel(db.Model):
     @classmethod
     def find_by_name(cls, name):
       _competition_id = CompetitionModel.query.filter_by(competicao=name).first().id
-      return cls.query.filter_by(competition_id=_competition_id).first()
+      return cls.query.filter_by(competition_id=_competition_id)
 
     @classmethod
     def find_athlete_tries(cls, competition_id, athelte):

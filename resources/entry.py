@@ -26,7 +26,7 @@ class Entry(Resource):
     def get(self, name):
       entry = EntryModel.find_by_name(name)
       if entry:
-        return entry.json()
+        return {name: [_entry.json() for _entry in entry]}
       return{'message': 'Entry not found'}, 404
 
     def post(self, name):
@@ -43,7 +43,7 @@ class Entry(Resource):
         data = Entry.parser.parse_args()
         competition_id = CompetitionModel.find_competition_id(name)
         athlete_num_tries = EntryModel.find_athlete_tries(competition_id, data['atleta'])
-        
+
         if _entry and athlete_num_tries and athlete_num_tries >= competition_num_tries:
             return {'message': "{} has reached the maximum number of attempts in {} competition.".format(data['atleta'], name)}, 500
 
@@ -59,7 +59,7 @@ class Entry(Resource):
 
     #@jwt_required()
     def delete(self, name):
-        item = EntryModel.find_by_name(name)
+        item = EntryModel.find_by_name(name).first()
         if item:
           item.delete_from_db()
 

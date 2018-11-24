@@ -10,7 +10,7 @@ class EntryTest(BaseTest):
             competition.save_to_db()
             entry = EntryModel('test', 19.99, 'm', 1)
 
-            self.assertIsNone(EntryModel.find_by_name('test'), "Found an entry with name 'test' before save_to_db")
+            self.assertIsNone(EntryModel.find_by_name('test').first(), "Found an entry with name 'test' before save_to_db")
 
             self.assertEqual(EntryModel.find_athlete_tries(1, 'test'), 0, "The number of tries for the athelte 'test' before save_to_db was not 0")
 
@@ -24,7 +24,7 @@ class EntryTest(BaseTest):
 
             entry.delete_from_db()
 
-            self.assertIsNone(EntryModel.find_by_name('test'), "Found an entry with name 'test' after delete_from_db")
+            self.assertIsNone(EntryModel.find_by_name('test').first(), "Found an entry with name 'test' after delete_from_db")
 
     def test_competition_relationship(self):
         with self.app_context():
