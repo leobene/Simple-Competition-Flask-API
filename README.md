@@ -60,3 +60,9 @@ Now let’s start the app:
 
 OK, everything should be ready. In your browser, open the URL http://127.0.0.1:5006/
 
+## Testing the application
+
+To run the unit, integration or system tests just folow the example above:
+
+$python -m unittest tests/system/entry_test.py
+
