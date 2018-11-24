@@ -41,15 +41,22 @@ To download and start the application issue the following commands.
 First clone the application code into any directory on your disk:
 
 $ cd /path/to/my/workspace/
+
 $ git clone https://github.com/leobene/Simple-Competition-Flask-API
+
 $ cd Simple-Competition-Flask-API
+
 Create a virtual Python environment in a directory named venv, activate the virtualenv and install required dependencies using pip:
 
 $ virtualenv -p python3 venv
+
 $ source venv/bin/activate
+
 (venv) $ pip install -r requirements.txt
+
 Now let’s start the app:
 
 (venv) $ python app.py
+
 OK, everything should be ready. In your browser, open the URL http://127.0.0.1:5006/
 
