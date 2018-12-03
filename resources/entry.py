@@ -67,5 +67,5 @@ class Entry(Resource):
 
 class EntryList(Resource):   
     def get(self):
-      return {'entradas': [entry.json() for entry in EntryModel.query.all()]}
+      return {'entradas': [entry.json() for entry in EntryModel.find_all()]}
       

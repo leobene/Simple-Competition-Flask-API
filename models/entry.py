@@ -27,6 +27,10 @@ class EntryModel(db.Model):
       return cls.query.filter_by(competition_id=_competition_id)
 
     @classmethod
+    def find_all(cls, name):
+      return cls.query.all()
+
+    @classmethod
     def find_athlete_tries(cls, competition_id, athelte):
       return cls.query.filter_by(competition_id=competition_id, atleta=athelte).paginate().total
 

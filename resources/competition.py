@@ -65,7 +65,7 @@ class Competition(Resource):
 
 class CompetitionList(Resource):
     def get(self):
-        return {'competitions': [competition.json() for competition in CompetitionModel.query.all()]}
+        return {'competitions': [competition.json() for competition in CompetitionModel.find_all()]}
 
 class Finish(Resource):
     def get(self, name):

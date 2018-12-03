@@ -27,6 +27,10 @@ class CompetitionModel(db.Model):
   def find_competition_id(cls, name):
     return cls.query.filter_by(competicao=name).first().id
 
+  @classmethod
+  def find_all(cls, name):
+    return cls.query.all()
+
   def save_to_db(self):
       db.session.add(self)
       db.session.commit()
