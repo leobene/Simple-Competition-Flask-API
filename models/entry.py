@@ -27,7 +27,7 @@ class EntryModel(db.Model):
       return cls.query.filter_by(competition_id=_competition_id)
 
     @classmethod
-    def find_all(cls, name):
+    def find_all(cls):
       return cls.query.all()
 
     @classmethod
