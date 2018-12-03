@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/leobene/Simple-Competition-Flask-API.svg?branch=master)](https://travis-ci.org/leobene/Simple-Competition-Flask-API)
+[![Coverage Status](https://coveralls.io/repos/github/leobene/Simple-Competition-Flask-API/badge.svg?branch=master)](https://coveralls.io/github/leobene/Simple-Competition-Flask-API?branch=master)
 # Simple-Competition-Flask-API
 A simple **REST** API to create and record competitions using Flask
 
