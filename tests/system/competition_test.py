@@ -107,7 +107,7 @@ class CompetitionTest(BaseTest):
                                     'numTrys': 1}]},
                                      d2=json.loads(r.data.decode('utf-8')))
 
-    def test_get_competition_ranking(self):
+    def test_get_competition_ranking_100m(self):
         with self.app() as c:
             with self.app_context():
                 CompetitionModel('100m', False, 1).save_to_db()
@@ -120,6 +120,21 @@ class CompetitionTest(BaseTest):
                 self.assertEqual([{'atleta': 'Bolt', 'value': 9.59, 'unidade': 's'},
                     {'atleta': 'human', 'value': 12.59, 'unidade': 's'},
                     {'atleta': 'Lazy', 'value': 19.59, 'unidade': 's'}],
+                    json.loads(r.data.decode('utf-8')))
+
+    def test_get_competition_ranking_dardo(self):
+        with self.app() as c:
+            with self.app_context():
+                CompetitionModel('Dardo', False, 1).save_to_db()
+                EntryModel('First', 100.00, 'm', 1).save_to_db()
+                EntryModel('Last', 10.00, 'm', 1).save_to_db()
+                EntryModel('Silver', 50.00, 'm', 1).save_to_db()
+                r = c.get('/finish/Dardo')
+
+                self.assertEqual(r.status_code, 200)
+                self.assertEqual([{'atleta': 'First', 'value': 100.00, 'unidade': 'm'},
+                    {'atleta': 'Silver', 'value': 50.00, 'unidade': 'm'},
+                    {'atleta': 'Last', 'value': 10.00, 'unidade': 'm'}],
                     json.loads(r.data.decode('utf-8')))
 
     def test_set_nonexistent_competition_isFinished(self):

@@ -72,7 +72,13 @@ class Finish(Resource):
         competition = CompetitionModel.find_by_name(name)
         if competition:
             competition_id = CompetitionModel.find_competition_id(name)
-            return [entry.json() for entry in EntryModel.query.filter_by(competition_id=competition_id).order_by('value')]
+            if competition.competicao.find("ardo") != -1:
+                #same as
+                #query = "SELECT atleta FROM entrys WHERE competition_id=? ORDER BY value desc"
+                return [entry.json() for entry in EntryModel.query.filter_by(competition_id=competition_id).order_by(EntryModel.value.desc())]
+            else:
+                #query = "SELECT atleta FROM entrys WHERE competition_id=? ORDER BY value asc"
+                return [entry.json() for entry in EntryModel.query.filter_by(competition_id=competition_id).order_by('value')]
         
         return{'message': 'Competition not found'}, 404
 
